@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Card</title>
+</head>
+<link rel="stylesheet" href="./style.css">
+
+<body>
+    <form id="usernameForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required>
+        <button type="submit">Submit</button>
+        <div id="userCard" class="card" style="display: none;"></div>
+    </form>
+
+
+
+
+    
+    <script>
+        // JavaScript code to fetch user data and display the user card
+        const form = document.getElementById('usernameForm');
+        const userCard = document.getElementById('userCard');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            fetch(`https://api.github.com/users/${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    userCard.innerHTML = `
+            <img class="avatar" src="${data.avatar_url}" alt="Avatar">
+            <div class="username">${data.login}</div>
+            <div class="name">${data.name}</div>
+            <div class="repos">Public Repos: ${data.public_repos}</div>
+            <div class="gists">Public Gists: ${data.public_gists}</div>
+            <div class="created-at">Profile Created At: ${data.created_at}</div>
+          `;
+                    userCard.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error(error);
+                    userCard.innerHTML = 'Error fetching user data.';
+                    userCard.style.display = 'block';
+                });
+        });
+    </script>
+</body>
+
+</html>
